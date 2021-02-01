@@ -9,6 +9,10 @@ from sapp.search import Server
 
 server = None
 app = FastAPI()
+index_p = "index_s.bin"
+embed_p = "embed_s.pkl"
+case_p = "cases.json"
+path_p = "idx_path.json"
 
 
 class Item(BaseModel):
@@ -16,7 +20,7 @@ class Item(BaseModel):
 
 
 origins = json.loads(
-    os.getenv("origins", '["http://localhost:8080", "https://kkkfff.web.app"]')
+    os.getenv("origins", '["http://127.0.0.1", "https://kkkfff.web.app"]')
 )
 
 app.add_middleware(
@@ -41,5 +45,11 @@ async def search(
 ):
     global server
     if not server:
-        server = Server()
+        server = Server(index_p=index_p, embed_p=embed_p, case_p=case_p, path_p=path_p)
     return server.search(item.text, top=top)
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8000)
