@@ -1,5 +1,7 @@
 *.lock
 data
+sapp
+tests
 .vscode
 .pre-commit*
 ### Python ###
@@ -15,7 +17,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/

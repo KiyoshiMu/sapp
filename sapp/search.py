@@ -69,13 +69,21 @@ class Server:
         self.bert = BertServer()
         self.indexer = load_index(index_p=index_p, embed_p=embed_p)
         self.case = load_cases(case_p)
-        self.path = load_path(path_p)
+        self.path_p = "idx_path.json"
+        self.path = None
 
-    def search(self, text, top=10):
+    def search_img(self, text, top=10):
         embed = self.bert.predict(text)
         _, ids = self.indexer.search(l2norm(embed), k=top)
+        if self.path is None:
+            self.path = load_path(self.path_p)
         # logger.info(ids[0], distences[0] )
         return {
             "cases": [self.case[idx] for idx in ids[0]],
             "imgs": [self.path[idx] for idx in ids[0]],
         }
+
+    def search_case(self, text, top=10):
+        embed = self.bert.predict(text)
+        _, ids = self.indexer.search(l2norm(embed), k=top)
+        return [self.case[idx] for idx in ids[0]]
